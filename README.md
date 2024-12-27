@@ -19,7 +19,7 @@
 1. Склонируйте репозиторий:
    ```bash
    git clone https://github.com/MosZsa/Lab3DjangoShopPc.git
-   cd ShopPC
+   cd Lab3DjangoShopPc
    ```
 
 2. Запустите сервер разработки:
