@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Оформление заказа</h1>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <h3 class="mb-3">Данные для доставки</h3>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Ошибка!</strong> Проверьте правильность заполнения полей.
+                        </div>
+                    {% endif %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success btn-lg w-100 mt-3">Оформить заказ</button>
+                </form>
+                <a href="{% url 'cart' %}" class="btn btn-outline-primary btn-lg w-100 mt-3">Вернуться в корзину</a>
+            </div>
+
+
+            <div class="col-md-6">
+                <h3 class="mb-3">Ваш заказ</h3>
+                <ul class="list-group">
+                    {% for item in cart_items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary text-light">
+                            {{ item.product.name }}
+                            <span>{{ item.quantity }} шт. ({{ item.total }} руб.)</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-3">
+                    <h4 class="text-end">Общая сумма: <span class="text-success">{{ total_price }} руб.</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

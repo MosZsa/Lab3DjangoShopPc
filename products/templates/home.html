@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopPC - Главная</title>
+    <link rel="icon" href="{{ MEDIA_URL }}media/favicon.ico" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        .card {
+            background-color: #212529;
+            color: #ffffff;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; 
+        }
+        .card .btn {
+            background-color: #ffc107;
+            border: none;
+        }
+        .card .btn:hover {
+            background-color: #e0a800;
+        }
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card p.text-muted {
+            color: #ffc107 !important;
+            font-weight: bold;
+        }
+        .carousel img {
+            height: 400px;
+            object-fit: cover;
+        }
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .list-group-item {
+            border: none;
+        }
+        .card-body {
+            flex-grow: 1; 
+        }
+    </style>
+    
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">ShopPC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Корзина</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'order_history' %}">Мои заказы</a></li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><span class="navbar-text text-white me-2">Привет, {{ user.username }}</span></li>
+                        <li class="nav-item"><a class="btn btn-warning btn-sm" href="{% url 'logout' %}">Выйти</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm me-2" href="{% url 'login' %}">Войти</a></li>
+                        <li class="nav-item"><a class="btn btn-success btn-sm" href="{% url 'register' %}">Регистрация</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ MEDIA_URL }}media/banner1.jpg" class="d-block w-100" alt="Добро пожаловать">
+                <div class="carousel-caption">
+                    <h3>Добро пожаловать в ShopPC</h3>
+                    <p>Лучшие компьютеры и комплектующие по доступным ценам!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{ MEDIA_URL }}media/banner2.jpg" class="d-block w-100" alt="Скидки">
+                <div class="carousel-caption">
+                    <h3>Скидки до 50%</h3>
+                    <p>Не упустите шанс обновить свой ПК.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+
+    <div class="container mt-4">
+        <div class="row">
+
+            <div class="col-md-3">
+                <h3>Категории</h3>
+                <ul class="list-group">
+                    {% for category in categories %}
+                        <li class="list-group-item bg-dark text-white">
+                            <a href="{% url 'product_list' category.id %}" class="text-warning">{{ category.name }}</a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item bg-dark text-white">Категории отсутствуют.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                <h3>Товары</h3>
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text">{{ product.description }}</p>
+                                    <p class="text-muted">Цена: {{ product.price }} руб.</p>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-warning btn-sm">Добавить в корзину</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center">Товары отсутствуют.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

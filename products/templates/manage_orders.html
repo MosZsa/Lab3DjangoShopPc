@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление заказами</title>
+</head>
+<body>
+    <h1>Управление заказами</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Номер заказа</th>
+                <th>Пользователь</th>
+                <th>Дата</th>
+                <th>Общая сумма</th>
+                <th>Текущий статус</th>
+                <th>Изменить статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.created_at }}</td>
+                    <td>{{ order.total_price }} руб.</td>
+                    <td>{{ order.get_status_display }}</td>
+                    <td>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <select name="status">
+                                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Ожидает обработки</option>
+                                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>В обработке</option>
+                                <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Завершен</option>
+                                <option value="canceled" {% if order.status == 'canceled' %}selected{% endif %}>Отменен</option>
+                            </select>
+                            <button type="submit">Сохранить</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

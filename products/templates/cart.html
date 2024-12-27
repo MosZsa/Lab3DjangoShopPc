@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-dark text-light">
+    <header class="bg-dark text-light py-3 mb-4">
+        <div class="container">
+            <h1 class="text-center">ShopPC</h1>
+            <nav class="nav justify-content-center">
+                <a href="/" class="nav-link text-light">Главная</a>
+                <a href="/cart/" class="nav-link text-light">Корзина</a>
+                <a href="/orders/" class="nav-link text-light">Мои заказы</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <h2 class="text-center mb-4">Корзина</h2>
+
+        {% if cart_items %}
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th class="text-center">Количество</th>
+                        <th class="text-center">Цена</th>
+                        <th class="text-center">Итого</th>
+                        <th class="text-center">Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'decrease_quantity' item.product.id %}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                            {{ item.quantity }}
+                            <a href="{% url 'increase_quantity' item.product.id %}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </td>
+                    
+                        <td class="text-center">{{ item.product.price }} руб.</td>
+                        <td class="text-center">{{ item.total }} руб.</td>
+                        <td class="text-center">
+                            <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Удалить
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="row mt-4">
+                <div class="col-md-6 offset-md-3 text-center">
+                    <h4>Общая сумма: <span class="text-warning">{{ total_price }} руб.</span></h4>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Продолжить покупки
+                </a>
+                <form action="{% url 'checkout' %}" method="get">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-check"></i> Оформить заказ
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center mt-4">
+                <h4>Ваша корзина пуста!</h4>
+                <p>Добавьте товары, чтобы начать покупки.</p>
+                <a href="/" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-cart"></i> Вернуться к покупкам
+                </a>
+            </div>
+        {% endif %}
+    </main>
+
+    <footer class="bg-dark text-light py-4 mt-4">
+        <div class="container text-center">
+            <p>&copy; 2024 ShopPC. Все права защищены.</p>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
